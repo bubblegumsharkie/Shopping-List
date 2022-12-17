@@ -1,11 +1,12 @@
 package com.countlesswrongs.shoppinglist.domain.usecase
 
 import com.countlesswrongs.shoppinglist.domain.model.ShopItem
+import com.countlesswrongs.shoppinglist.domain.repository.ShopListRepository
 
-class GetShopListUseCase {
+class GetShopListUseCase(private val shopListRepository: ShopListRepository) {
 
     fun getShopList(): List<ShopItem> {
-        TODO()
+        return shopListRepository.getShopList()
     }
 
 }
