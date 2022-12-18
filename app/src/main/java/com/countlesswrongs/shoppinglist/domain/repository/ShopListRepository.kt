@@ -1,5 +1,6 @@
 package com.countlesswrongs.shoppinglist.domain.repository
 
+import androidx.lifecycle.LiveData
 import com.countlesswrongs.shoppinglist.domain.model.ShopItem
 
 interface ShopListRepository {
@@ -12,6 +13,6 @@ interface ShopListRepository {
 
     fun getShopItem(id: Int): ShopItem
 
-    fun getShopList(): List<ShopItem>
+    fun getShopList(): LiveData<List<ShopItem>>
 
 }
