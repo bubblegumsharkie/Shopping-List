@@ -1,10 +1,13 @@
 package com.countlesswrongs.shoppinglist.data
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.countlesswrongs.shoppinglist.domain.model.ShopItem
 import com.countlesswrongs.shoppinglist.domain.repository.ShopListRepository
 
 object ShopListRepositoryImpl : ShopListRepository {
 
+    private val shopListLiveData = MutableLiveData<List<ShopItem>>()
     private val shopList = mutableListOf<ShopItem>()
 
     private var autoIncrementId: Int = 0
@@ -21,10 +24,12 @@ object ShopListRepositoryImpl : ShopListRepository {
             item.id = autoIncrementId++
         }
         shopList.add(item)
+        updateList()
     }
 
     override fun deleteShopItem(item: ShopItem) {
         shopList.remove(item)
+        updateList()
     }
 
     override fun editShopItem(item: ShopItem) {
@@ -39,8 +44,12 @@ object ShopListRepositoryImpl : ShopListRepository {
         } ?: throw RuntimeException("The item with $id was not found")
     }
 
-    override fun getShopList(): List<ShopItem> {
-        return shopList.toList()
+    override fun getShopList(): LiveData<List<ShopItem>> {
+        return shopListLiveData
+    }
+
+    private fun updateList() {
+        shopListLiveData.value = shopList.toList()
     }
 
 }
