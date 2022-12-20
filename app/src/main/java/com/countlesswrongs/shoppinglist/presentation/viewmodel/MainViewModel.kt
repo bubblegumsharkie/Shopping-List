@@ -1,4 +1,4 @@
-package com.countlesswrongs.shoppinglist.presentation
+package com.countlesswrongs.shoppinglist.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import com.countlesswrongs.shoppinglist.data.ShopListRepositoryImpl
