@@ -1,50 +1,43 @@
 package com.countlesswrongs.shoppinglist.presentation.activity
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.RecyclerView
 import com.countlesswrongs.shoppinglist.R
-import com.countlesswrongs.shoppinglist.domain.model.ShopItem
+import com.countlesswrongs.shoppinglist.presentation.adapter.ShopListAdapter
 import com.countlesswrongs.shoppinglist.presentation.viewmodel.MainViewModel
 
 class MainActivity : AppCompatActivity() {
 
-    lateinit var viewModel: MainViewModel
-    lateinit var llShopList: LinearLayout
+    private lateinit var viewModel: MainViewModel
+    private lateinit var adapterShopList: ShopListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        llShopList = findViewById(R.id.ll_shop_list)
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
+        setupRecyclerView()
         viewModel.shopList.observe(this) {
-            showList(it)
+            adapterShopList.shopItemList = it
         }
     }
 
-    private fun showList(list: List<ShopItem>) {
-        llShopList.removeAllViews()
-        for (shopItem in list) {
-            val layoutID = if (shopItem.active) {
-                R.layout.item_enabled
-            } else {
-                R.layout.item_disabled
-            }
-            val view = LayoutInflater.from(this).inflate(layoutID, llShopList, false)
-            val tvName = view.findViewById<TextView>(R.id.textViewItemName)
-            val tvAmount = view.findViewById<TextView>(R.id.textViewAmount)
-            tvName.text = shopItem.name
-            tvAmount.text = shopItem.amount.toString()
+    private fun setupRecyclerView() {
+        val recyclerView = findViewById<RecyclerView>(R.id.shoppingListRecyclerView)
 
-            view.setOnLongClickListener {
-                viewModel.changeStatusShopItem(shopItem)
-                true
-            }
-
-            llShopList.addView(view)
+        with(recyclerView) {
+            adapterShopList = ShopListAdapter()
+            this.adapter = adapterShopList
+            recycledViewPool.setMaxRecycledViews(
+                ShopListAdapter.VIEW_TYPE_ENABLED,
+                ShopListAdapter.MAX_POOL_SIZE
+            )
+            recycledViewPool.setMaxRecycledViews(
+                ShopListAdapter.VIEW_TYPE_DISABLED,
+                ShopListAdapter.MAX_POOL_SIZE
+            )
         }
     }
+
 }
