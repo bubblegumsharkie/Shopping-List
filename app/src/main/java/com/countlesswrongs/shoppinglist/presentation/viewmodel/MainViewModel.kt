@@ -26,4 +26,8 @@ class MainViewModel : ViewModel() {
         editShopItemUseCase.editShopItem(newShopItem)
     }
 
+    fun editShopItem(shopItem: ShopItem) {
+        editShopItemUseCase.editShopItem(shopItem)
+    }
+
 }
