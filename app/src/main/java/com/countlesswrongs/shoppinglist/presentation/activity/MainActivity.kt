@@ -20,7 +20,7 @@ class MainActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
         setupRecyclerView()
         viewModel.shopList.observe(this) {
-            shopListAdapter.shopItemList = it
+            shopListAdapter.submitList(it)
         }
     }
 
@@ -59,7 +59,7 @@ class MainActivity : AppCompatActivity() {
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 if (direction == ItemTouchHelper.LEFT) {
-                    val item = shopListAdapter.shopItemList[viewHolder.adapterPosition]
+                    val item = shopListAdapter.currentList[viewHolder.adapterPosition]
                     viewModel.deleteShopItem(item)
                 }
             }

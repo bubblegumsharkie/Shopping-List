@@ -4,22 +4,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.countlesswrongs.shoppinglist.R
 import com.countlesswrongs.shoppinglist.domain.model.ShopItem
-import com.countlesswrongs.shoppinglist.presentation.utils.ShopListDiffCallback
+import com.countlesswrongs.shoppinglist.presentation.utils.ShopItemDiffCallback
 
-class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>() {
-
-    var shopItemList = listOf<ShopItem>()
-        set(value) {
-            val callback = ShopListDiffCallback(shopItemList, value)
-            val diffResult = DiffUtil.calculateDiff(callback)
-            diffResult.dispatchUpdatesTo(this)
-            field = value
-        }
+class ShopListAdapter :
+    ListAdapter<ShopItem, ShopListAdapter.ShopItemViewHolder>(ShopItemDiffCallback()) {
 
     var onShopItemLongClickListener: ((ShopItem) -> Unit)? = null
     var onShopItemClickListener: ((ShopItem) -> Unit)? = null
@@ -35,7 +27,7 @@ class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>
     }
 
     override fun onBindViewHolder(holder: ShopItemViewHolder, position: Int) {
-        val shopItem = shopItemList[position]
+        val shopItem = getItem(position)
 
         holder.textViewName.text = shopItem.name
         holder.textViewAmount.text = shopItem.amount.toString()
@@ -50,28 +42,12 @@ class ShopListAdapter : RecyclerView.Adapter<ShopListAdapter.ShopItemViewHolder>
 
     }
 
-    override fun onViewRecycled(holder: ShopItemViewHolder) {
-        super.onViewRecycled(holder)
-        holder.textViewName.text = ""
-        holder.textViewAmount.text = ""
-        holder.textViewName.setTextColor(
-            ContextCompat.getColor(
-                holder.itemView.context,
-                android.R.color.white
-            )
-        )
-    }
-
     override fun getItemViewType(position: Int): Int {
-        return if (shopItemList[position].active) {
+        return if (getItem(position).active) {
             VIEW_TYPE_ENABLED
         } else {
             VIEW_TYPE_DISABLED
         }
-    }
-
-    override fun getItemCount(): Int {
-        return shopItemList.size
     }
 
     class ShopItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
