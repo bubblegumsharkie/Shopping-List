@@ -4,4 +4,5 @@
     <string name="desc_add_new_shop_item">Add new shop item</string>
     <string name="hint_name_of_the_item">Name of the item</string>
     <string name="hint_amount">Amount</string>
+    <string name="btn_save">Save</string>
 </resources>
